@@ -1,0 +1,49 @@
+body {
+    display: grid;
+    place-items: center;
+}
+
+.topSection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 20px;
+}
+
+#reset {
+    place-self: center;
+    color: red;
+    cursor: pointer;
+    border: 2px solid red;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+}
+
+#gridArea {
+    display: grid;
+    width: 750px;
+    height: 380px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr
+}
+
+.square {
+    text-align: center;
+    background-color: #bdbdbd;
+    width: 25px;
+    height: 25px;
+    border: 2px solid #7b7b7b;
+    cursor: pointer;
+    box-sizing: border-box;
+    background-size: contain;
+    padding-top: 2px;
+    font-weight: bold;
+}
+
+#tryHarder {
+    margin-top: 50px;
+    display: none;
+}
+
+#victory {
+    display: none;
+}
