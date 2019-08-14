@@ -27,7 +27,7 @@ setTimeout(() => {
                 if (e.target.style.backgroundImage == 'url("flag.PNG")') {
                     e.target.style.backgroundImage = '';
                     mattsRemaining++;
-                } else {
+                } else if (mattsRemaining > 0) {
                     e.target.style.backgroundImage = 'url("flag.PNG")';
                     mattsRemaining--;
                 }
