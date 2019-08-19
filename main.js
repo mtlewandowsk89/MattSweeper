@@ -132,6 +132,7 @@ checkTopLeftCorner = (e) => {
             e.target.innerHTML = nearbymatts;
         } else {
             e.target.style.backgroundColor = '#908c8c';
+            e.target.style.cursor = 'default';
         }
     } else {
         if (nearbymatts === 0 && e <= 480 && e > 0) {
@@ -141,6 +142,7 @@ checkTopLeftCorner = (e) => {
             document.getElementById(e).innerHTML = nearbymatts;
         } else {
             document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.cursor = 'default';
         }
     }
 }
@@ -165,6 +167,7 @@ checkTopRightCorner = (e) => {
             e.target.innerHTML = nearbymatts;
         } else {
             e.target.style.backgroundColor = '#908c8c';
+            e.target.style.cursor = 'default';
         }
     } else {
         if (nearbymatts === 0 && e <= 480 && e > 0) {
@@ -174,6 +177,7 @@ checkTopRightCorner = (e) => {
             document.getElementById(e).innerHTML = nearbymatts;
         } else {
             document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.cursor = 'default';
         }
     }
 }
@@ -198,6 +202,7 @@ checkBottomLeftCorner = (e) => {
             e.target.innerHTML = nearbymatts;
         } else {
             e.target.style.backgroundColor = '#908c8c';
+            e.target.style.cursor = 'default';
         }
         
     } else {
@@ -208,6 +213,7 @@ checkBottomLeftCorner = (e) => {
             document.getElementById(e).innerHTML = nearbymatts;
         } else {
             document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.cursor = 'default';
         }
         
     }
@@ -233,6 +239,7 @@ checkBottomRightCorner = (e) => {
             e.target.innerHTML = nearbymatts;
         } else {
             e.target.style.backgroundColor = '#908c8c';
+            e.target.style.cursor = 'default';
         }
         
     } else {
@@ -243,6 +250,7 @@ checkBottomRightCorner = (e) => {
             document.getElementById(e).innerHTML = nearbymatts;
         } else {
             document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.cursor = 'default';
         }
         
     }
@@ -273,6 +281,7 @@ checkLeftEdge = (e) => {
             e.target.innerHTML = nearbymatts;
         } else {
             e.target.style.backgroundColor = '#908c8c';
+            e.target.style.cursor = 'default';
         }
     } else {
         if (mattLocations.indexOf(e - 30) >= 0) {
@@ -297,6 +306,7 @@ checkLeftEdge = (e) => {
             document.getElementById(e).innerHTML = nearbymatts;
         } else {
             document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.cursor = 'default';
         }
     }
 }
@@ -326,6 +336,7 @@ checkRightEdge = (e) => {
             e.target.innerHTML = nearbymatts;
         } else {
             e.target.style.backgroundColor = '#908c8c';
+            e.target.style.cursor = 'default';
         }
     } else {
         if (mattLocations.indexOf(e - 31) >= 0) {
@@ -350,6 +361,7 @@ checkRightEdge = (e) => {
             document.getElementById(e).innerHTML = nearbymatts;
         } else {
             document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.cursor = 'default';
         }
     } 
 }
@@ -388,6 +400,7 @@ checkOtherSquares = (e) => {
             e.target.innerHTML = nearbymatts;
         } else {
             e.target.style.backgroundColor = '#908c8c';
+            e.target.style.cursor = 'default';
         }
     } else {
         if (mattLocations.indexOf(e - 31) >= 0) {
@@ -421,6 +434,7 @@ checkOtherSquares = (e) => {
             document.getElementById(e).innerHTML = nearbymatts;
         } else if (document.getElementById(e) && nearbymatts === 0) {
             document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.cursor = 'default';
         }
     }
 }
@@ -482,5 +496,6 @@ reset = () => {
         square.style.backgroundImage = '';
         square.innerHTML = '';
         square.style.backgroundColor = '#bdbdbd';
+        square.style.cursor = 'pointer';
     })
 }
