@@ -19,7 +19,7 @@ setTimeout(() => {
         newDiv.id = i;
         newDiv.addEventListener('mousedown', (e) => {
             // don't allow clicking on flagged square
-            if ((e.target.style.backgroundImage == 'url("flag.PNG")' && e.button !== 2) || 
+            if ((e.target.style.backgroundImage == 'url("icecream-vector-simple-15.png")' && e.button !== 2) || 
             (document.getElementById('victory').style.display === 'block') || 
             (document.getElementById('tryHarder').style.display === 'block')) {
                 return;
@@ -28,18 +28,18 @@ setTimeout(() => {
             if (e.button === 2) {
                 if (e.target.style.backgroundColor !== 'rgb(216, 216, 216)') {
                     let correctFlags = 0;
-                    if (e.target.style.backgroundImage == 'url("flag.PNG")') {
+                    if (e.target.style.backgroundImage == 'url("icecream-vector-simple-15.png")') {
                         e.target.style.backgroundImage = '';
                         mattsRemaining++;
                     // only allow 99 flags
                     } else if (mattsRemaining > 0 && e.target.innerHTML === '') {
-                        e.target.style.backgroundImage = 'url("flag.PNG")';
+                        e.target.style.backgroundImage = 'url("icecream-vector-simple-15.png")';
                         mattsRemaining--;
                     }
                     document.getElementById('remaining').innerHTML = `Matts remaining: ${mattsRemaining}`;
                     //check how many flags are correct
                     mattLocations.forEach((matt) => {
-                        if (document.getElementById(matt).style.backgroundImage == 'url("flag.PNG")') {
+                        if (document.getElementById(matt).style.backgroundImage == 'url("icecream-vector-simple-15.png")') {
                             correctFlags++;
                         }
                     })
