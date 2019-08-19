@@ -26,7 +26,7 @@ setTimeout(() => {
             }
             // Matt identified
             if (e.button === 2) {
-                if (e.target.style.backgroundColor !== 'rgb(144, 140, 140)') {
+                if (e.target.style.backgroundColor !== 'rgb(216, 216, 216)') {
                     let correctFlags = 0;
                     if (e.target.style.backgroundImage == 'url("flag.PNG")') {
                         e.target.style.backgroundImage = '';
@@ -131,7 +131,7 @@ checkTopLeftCorner = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#908c8c';
+            e.target.style.backgroundColor = '#d8d8d8';
             e.target.style.cursor = 'default';
         }
     } else {
@@ -141,7 +141,7 @@ checkTopLeftCorner = (e) => {
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
         } else {
-            document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.backgroundColor = '#d8d8d8';
             document.getElementById(e).style.cursor = 'default';
         }
     }
@@ -166,7 +166,7 @@ checkTopRightCorner = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#908c8c';
+            e.target.style.backgroundColor = '#d8d8d8';
             e.target.style.cursor = 'default';
         }
     } else {
@@ -176,7 +176,7 @@ checkTopRightCorner = (e) => {
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
         } else {
-            document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.backgroundColor = '#d8d8d8';
             document.getElementById(e).style.cursor = 'default';
         }
     }
@@ -201,7 +201,7 @@ checkBottomLeftCorner = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#908c8c';
+            e.target.style.backgroundColor = '#d8d8d8';
             e.target.style.cursor = 'default';
         }
         
@@ -212,7 +212,7 @@ checkBottomLeftCorner = (e) => {
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
         } else {
-            document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.backgroundColor = '#d8d8d8';
             document.getElementById(e).style.cursor = 'default';
         }
         
@@ -238,7 +238,7 @@ checkBottomRightCorner = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#908c8c';
+            e.target.style.backgroundColor = '#d8d8d8';
             e.target.style.cursor = 'default';
         }
         
@@ -249,7 +249,7 @@ checkBottomRightCorner = (e) => {
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
         } else {
-            document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.backgroundColor = '#d8d8d8';
             document.getElementById(e).style.cursor = 'default';
         }
         
@@ -280,7 +280,7 @@ checkLeftEdge = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#908c8c';
+            e.target.style.backgroundColor = '#d8d8d8';
             e.target.style.cursor = 'default';
         }
     } else {
@@ -305,7 +305,7 @@ checkLeftEdge = (e) => {
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
         } else {
-            document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.backgroundColor = '#d8d8d8';
             document.getElementById(e).style.cursor = 'default';
         }
     }
@@ -335,7 +335,7 @@ checkRightEdge = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#908c8c';
+            e.target.style.backgroundColor = '#d8d8d8';
             e.target.style.cursor = 'default';
         }
     } else {
@@ -360,7 +360,7 @@ checkRightEdge = (e) => {
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
         } else {
-            document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.backgroundColor = '#d8d8d8';
             document.getElementById(e).style.cursor = 'default';
         }
     } 
@@ -399,7 +399,7 @@ checkOtherSquares = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#908c8c';
+            e.target.style.backgroundColor = '#d8d8d8';
             e.target.style.cursor = 'default';
         }
     } else {
@@ -433,7 +433,7 @@ checkOtherSquares = (e) => {
         if (document.getElementById(e) && nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
         } else if (document.getElementById(e) && nearbymatts === 0) {
-            document.getElementById(e).style.backgroundColor = '#908c8c';
+            document.getElementById(e).style.backgroundColor = '#d8d8d8';
             document.getElementById(e).style.cursor = 'default';
         }
     }
