@@ -19,30 +19,34 @@ setTimeout(() => {
         newDiv.id = i;
         newDiv.addEventListener('mousedown', (e) => {
             // don't allow clicking on flagged square
-            if ((e.target.style.backgroundImage == 'url("flag.PNG")' && e.button !== 2) || mattsRemaining === 0) {
+            if ((e.target.style.backgroundImage == 'url("flag.PNG")' && e.button !== 2) || 
+            (document.getElementById('victory').style.display === 'block') || 
+            (document.getElementById('tryHarder').style.display === 'block')) {
                 return;
             }
             // Matt identified
             if (e.button === 2) {
-                let correctFlags = 0;
-                if (e.target.style.backgroundImage == 'url("flag.PNG")') {
-                    e.target.style.backgroundImage = '';
-                    mattsRemaining++;
-                // only allow 99 flags
-                } else if (mattsRemaining > 0 && e.target.innerHTML === '') {
-                    e.target.style.backgroundImage = 'url("flag.PNG")';
-                    mattsRemaining--;
-                }
-                document.getElementById('remaining').innerHTML = `Matts remaining: ${mattsRemaining}`;
-                //check how many flags are correct
-                mattLocations.forEach((matt) => {
-                    if (document.getElementById(matt).style.backgroundImage == 'url("flag.PNG")') {
-                        correctFlags++;
+                if (e.target.style.backgroundColor !== 'rgb(144, 140, 140)') {
+                    let correctFlags = 0;
+                    if (e.target.style.backgroundImage == 'url("flag.PNG")') {
+                        e.target.style.backgroundImage = '';
+                        mattsRemaining++;
+                    // only allow 99 flags
+                    } else if (mattsRemaining > 0 && e.target.innerHTML === '') {
+                        e.target.style.backgroundImage = 'url("flag.PNG")';
+                        mattsRemaining--;
                     }
-                })
-                // if all flags are correct
-                if (correctFlags === startingMatts) {
-                    document.getElementById('victory').style.display = 'block';
+                    document.getElementById('remaining').innerHTML = `Matts remaining: ${mattsRemaining}`;
+                    //check how many flags are correct
+                    mattLocations.forEach((matt) => {
+                        if (document.getElementById(matt).style.backgroundImage == 'url("flag.PNG")') {
+                            correctFlags++;
+                        }
+                    })
+                    // if all flags are correct
+                    if (correctFlags === startingMatts) {
+                        document.getElementById('victory').style.display = 'block';
+                    }
                 }
             } else {
                 // Matt clicked
@@ -124,12 +128,20 @@ checkTopLeftCorner = (e) => {
         if (nearbymatts === 0) {
             checkForMoreZeros([2, 31, 32]);
         }
-        e.target.innerHTML = nearbymatts;
+        if (nearbymatts > 0) {
+            e.target.innerHTML = nearbymatts;
+        } else {
+            e.target.style.backgroundColor = '#908c8c';
+        }
     } else {
         if (nearbymatts === 0 && e <= 480 && e > 0) {
             checkForMoreZeros([2, 31, 32]);
         }
-        document.getElementById(e).innerHTML = nearbymatts;
+        if (nearbymatts > 0) {
+            document.getElementById(e).innerHTML = nearbymatts;
+        } else {
+            document.getElementById(e).style.backgroundColor = '#908c8c';
+        }
     }
 }
 
@@ -149,12 +161,20 @@ checkTopRightCorner = (e) => {
         if (nearbymatts === 0) {
             checkForMoreZeros([29, 59, 60]);
         }
-        e.target.innerHTML = nearbymatts;
+        if (nearbymatts > 0) {
+            e.target.innerHTML = nearbymatts;
+        } else {
+            e.target.style.backgroundColor = '#908c8c';
+        }
     } else {
         if (nearbymatts === 0 && e <= 480 && e > 0) {
             checkForMoreZeros([29, 59, 60]);
         }
-        document.getElementById(e).innerHTML = nearbymatts;
+        if (nearbymatts > 0) {
+            document.getElementById(e).innerHTML = nearbymatts;
+        } else {
+            document.getElementById(e).style.backgroundColor = '#908c8c';
+        }
     }
 }
 
@@ -174,12 +194,22 @@ checkBottomLeftCorner = (e) => {
         if (nearbymatts === 0) {
             checkForMoreZeros([421, 422, 452]);
         }
-        e.target.innerHTML = nearbymatts;
+        if (nearbymatts > 0) {
+            e.target.innerHTML = nearbymatts;
+        } else {
+            e.target.style.backgroundColor = '#908c8c';
+        }
+        
     } else {
         if (nearbymatts === 0 && e <= 480 && e > 0) {
             checkForMoreZeros([421, 422, 452]);
         }
-        document.getElementById(e).innerHTML = nearbymatts;
+        if (nearbymatts > 0) {
+            document.getElementById(e).innerHTML = nearbymatts;
+        } else {
+            document.getElementById(e).style.backgroundColor = '#908c8c';
+        }
+        
     }
 }
 
@@ -199,12 +229,22 @@ checkBottomRightCorner = (e) => {
         if (nearbymatts === 0) {
             checkForMoreZeros([449, 450, 479]);
         }
-        e.target.innerHTML = nearbymatts;
+        if (nearbymatts > 0) {
+            e.target.innerHTML = nearbymatts;
+        } else {
+            e.target.style.backgroundColor = '#908c8c';
+        }
+        
     } else {
         if (nearbymatts === 0 && e <= 480 && e > 0) {
             checkForMoreZeros([449, 450, 479]);
         }
-        document.getElementById(e).innerHTML = nearbymatts;
+        if (nearbymatts > 0) {
+            document.getElementById(e).innerHTML = nearbymatts;
+        } else {
+            document.getElementById(e).style.backgroundColor = '#908c8c';
+        }
+        
     }
 }
 
@@ -229,7 +269,11 @@ checkLeftEdge = (e) => {
         if (nearbymatts === 0) {
             checkForMoreZeros([+e.target.id - 30, +e.target.id - 29, +e.target.id + 1, +e.target.id + 30, +e.target.id + 31]);
         }
-        e.target.innerHTML = nearbymatts;
+        if (nearbymatts > 0) {
+            e.target.innerHTML = nearbymatts;
+        } else {
+            e.target.style.backgroundColor = '#908c8c';
+        }
     } else {
         if (mattLocations.indexOf(e - 30) >= 0) {
             nearbymatts++;
@@ -249,7 +293,11 @@ checkLeftEdge = (e) => {
         if (nearbymatts === 0 && e <= 480 && e > 0) {
             checkForMoreZeros([e - 30, e - 29, e + 1, e + 30, e + 31]);
         }
-        document.getElementById(e).innerHTML = nearbymatts;
+        if (nearbymatts > 0) {
+            document.getElementById(e).innerHTML = nearbymatts;
+        } else {
+            document.getElementById(e).style.backgroundColor = '#908c8c';
+        }
     }
 }
 
@@ -274,7 +322,11 @@ checkRightEdge = (e) => {
         if (nearbymatts === 0) {
             checkForMoreZeros([+e.target.id - 31, +e.target.id - 30, +e.target.id - 1, +e.target.id + 29, +e.target.id + 30]);
         }
-        e.target.innerHTML = nearbymatts;
+        if (nearbymatts > 0) {
+            e.target.innerHTML = nearbymatts;
+        } else {
+            e.target.style.backgroundColor = '#908c8c';
+        }
     } else {
         if (mattLocations.indexOf(e - 31) >= 0) {
             nearbymatts++;
@@ -294,9 +346,12 @@ checkRightEdge = (e) => {
         if (nearbymatts === 0 && e <= 480 && e > 0) {
             checkForMoreZeros([e - 31, e - 30, e - 1, e + 29, e + 30]);
         }
-        document.getElementById(e).innerHTML = nearbymatts;
-    }
-    
+        if (nearbymatts > 0) {
+            document.getElementById(e).innerHTML = nearbymatts;
+        } else {
+            document.getElementById(e).style.backgroundColor = '#908c8c';
+        }
+    } 
 }
 
 checkOtherSquares = (e) => {
@@ -329,7 +384,11 @@ checkOtherSquares = (e) => {
         if (nearbymatts === 0) {
             checkForMoreZeros([+e.target.id - 31, +e.target.id - 30, +e.target.id - 29, +e.target.id - 1, +e.target.id + 1, +e.target.id + 29, +e.target.id + 30, +e.target.id + 31]);
         }
-        e.target.innerHTML = nearbymatts;
+        if (nearbymatts > 0) {
+            e.target.innerHTML = nearbymatts;
+        } else {
+            e.target.style.backgroundColor = '#908c8c';
+        }
     } else {
         if (mattLocations.indexOf(e - 31) >= 0) {
             nearbymatts++;
@@ -358,11 +417,12 @@ checkOtherSquares = (e) => {
         if (nearbymatts === 0 && e <= 480 && e > 0) {
             checkForMoreZeros([e - 31, e - 30, e - 29, e - 1, e + 1, e + 29, e + 30, e + 31]);
         }
-        if (document.getElementById(e)) {
+        if (document.getElementById(e) && nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
+        } else if (document.getElementById(e) && nearbymatts === 0) {
+            document.getElementById(e).style.backgroundColor = '#908c8c';
         }
     }
-    
 }
 
 checkForMoreZeros = (squaresToCheck) => {
@@ -421,5 +481,6 @@ reset = () => {
     Array.from(squares).forEach((square) => {
         square.style.backgroundImage = '';
         square.innerHTML = '';
+        square.style.backgroundColor = '#bdbdbd';
     })
 }
