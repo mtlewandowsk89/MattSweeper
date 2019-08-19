@@ -19,7 +19,7 @@ setTimeout(() => {
         newDiv.id = i;
         newDiv.addEventListener('mousedown', (e) => {
             // don't allow clicking on flagged square
-            if (e.target.style.backgroundImage == 'url("flag.PNG")' && e.button !== 2) {
+            if ((e.target.style.backgroundImage == 'url("flag.PNG")' && e.button !== 2) || mattsRemaining === 0) {
                 return;
             }
             // Matt identified
