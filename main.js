@@ -27,7 +27,8 @@ setTimeout(() => {
                 if (e.target.style.backgroundImage == 'url("flag.PNG")') {
                     e.target.style.backgroundImage = '';
                     mattsRemaining++;
-                } else if (mattsRemaining > 0) {
+                // only allow 99 flags
+                } else if (mattsRemaining > 0 && e.target.innerHTML === '') {
                     e.target.style.backgroundImage = 'url("flag.PNG")';
                     mattsRemaining--;
                 }
