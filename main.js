@@ -76,6 +76,7 @@ setTimeout(() => {
                         checkOtherSquares(e);
                     }
                     // set text colors
+                    e.target.style.backgroundColor = '#d8d8d8';
                     if (e.target.innerHTML === '1') {
                         e.target.style.color = '#1e1ff2';
                     } else if (e.target.innerHTML === '2') {
@@ -462,6 +463,7 @@ checkForMoreZeros = (squaresToCheck) => {
             
             // set text colors
             if (document.getElementById(square)) {
+                document.getElementById(square).style.backgroundColor = '#d8d8d8';
                 if (document.getElementById(square).innerHTML === '1') {
                     document.getElementById(square).style.color = '#1e1ff2';
                 } else if (document.getElementById(square).innerHTML === '2') {
