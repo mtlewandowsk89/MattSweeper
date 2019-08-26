@@ -9,7 +9,7 @@ let squaresChecked = [];
 window.oncontextmenu = () => {return false;}
 
 setTimeout(() => {
-    document.getElementById('remaining').innerHTML = `Matts remaining: ${mattsRemaining}`;
+    updateMattCount();
     let gridArea = document.getElementById('gridArea');
     // Create 30 x 16 game grid
     for (i = 1; i <= 480; i++) {
@@ -36,7 +36,7 @@ setTimeout(() => {
                         e.target.style.backgroundImage = 'url("icecream-vector-simple-15.png")';
                         mattsRemaining--;
                     }
-                    document.getElementById('remaining').innerHTML = `Matts remaining: ${mattsRemaining}`;
+                    updateMattCount();
                     //check how many flags are correct
                     mattLocations.forEach((matt) => {
                         if (document.getElementById(matt).style.backgroundImage == 'url("icecream-vector-simple-15.png")') {
@@ -56,7 +56,7 @@ setTimeout(() => {
                         document.getElementById(matt).style.backgroundImage = 'url("./try_harder.png")';
                     })
                     mattsRemaining = 0;
-                    document.getElementById('remaining').innerHTML = `Matts remaining: ${mattsRemaining}`;
+                    updateMattCount();
                     document.getElementById('tryHarder').style.display = 'block';
                 } else {
                     //Check location of nearby matts
@@ -102,7 +102,7 @@ setTimeout(() => {
 
 setMatts = () => {
     // set 99 matts (expert difficulty)
-    for (i = 1; i <= 99; i++) {
+    for (i = 1; i <= startingMatts; i++) {
         let matt = Math.floor(Math.random() * 480) + 1;
         if (mattLocations.indexOf(matt) >= 0) {
             // If already a matt at that square, reduce incrementor and loop through again so we end up with 99 matts.
@@ -112,6 +112,20 @@ setMatts = () => {
             mattLocations.push(matt);
         }
     }
+}
+
+updateMattCount = () => {
+    document.getElementById('remaining').innerHTML = `Matts remaining: ${mattsRemaining}`;
+}
+
+emptyTileEventStyling = (e) => {
+    e.target.style.backgroundColor = '#d8d8d8';
+    e.target.style.cursor = 'default';
+}
+
+emptyTileNumberStyling = (e) => {
+    document.getElementById(e).style.backgroundColor = '#d8d8d8';
+    document.getElementById(e).style.cursor = 'default';
 }
 
 checkTopLeftCorner = (e) => {
@@ -132,8 +146,7 @@ checkTopLeftCorner = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#d8d8d8';
-            e.target.style.cursor = 'default';
+            emptyTileEventStyling(e);
         }
     } else {
         if (nearbymatts === 0 && e <= 480 && e > 0) {
@@ -141,9 +154,11 @@ checkTopLeftCorner = (e) => {
         }
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
+            removeIncorrectFlag(e);
+            
         } else {
-            document.getElementById(e).style.backgroundColor = '#d8d8d8';
-            document.getElementById(e).style.cursor = 'default';
+            emptyTileNumberStyling(e);
+            removeIncorrectFlag(e);
         }
     }
 }
@@ -167,8 +182,7 @@ checkTopRightCorner = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#d8d8d8';
-            e.target.style.cursor = 'default';
+            emptyTileEventStyling(e);
         }
     } else {
         if (nearbymatts === 0 && e <= 480 && e > 0) {
@@ -176,9 +190,10 @@ checkTopRightCorner = (e) => {
         }
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
+            removeIncorrectFlag(e);
         } else {
-            document.getElementById(e).style.backgroundColor = '#d8d8d8';
-            document.getElementById(e).style.cursor = 'default';
+            emptyTileNumberStyling(e);
+            removeIncorrectFlag(e);
         }
     }
 }
@@ -202,8 +217,7 @@ checkBottomLeftCorner = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#d8d8d8';
-            e.target.style.cursor = 'default';
+            emptyTileEventStyling(e);
         }
         
     } else {
@@ -212,9 +226,10 @@ checkBottomLeftCorner = (e) => {
         }
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
+            removeIncorrectFlag(e);
         } else {
-            document.getElementById(e).style.backgroundColor = '#d8d8d8';
-            document.getElementById(e).style.cursor = 'default';
+            emptyTileNumberStyling(e);
+            removeIncorrectFlag(e);
         }
         
     }
@@ -239,8 +254,7 @@ checkBottomRightCorner = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#d8d8d8';
-            e.target.style.cursor = 'default';
+            emptyTileEventStyling(e);
         }
         
     } else {
@@ -249,9 +263,10 @@ checkBottomRightCorner = (e) => {
         }
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
+            removeIncorrectFlag(e);
         } else {
-            document.getElementById(e).style.backgroundColor = '#d8d8d8';
-            document.getElementById(e).style.cursor = 'default';
+            emptyTileNumberStyling(e);
+            removeIncorrectFlag(e);
         }
         
     }
@@ -281,8 +296,7 @@ checkLeftEdge = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#d8d8d8';
-            e.target.style.cursor = 'default';
+            emptyTileEventStyling(e);
         }
     } else {
         if (mattLocations.indexOf(e - 30) >= 0) {
@@ -305,9 +319,10 @@ checkLeftEdge = (e) => {
         }
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
+            removeIncorrectFlag(e);
         } else {
-            document.getElementById(e).style.backgroundColor = '#d8d8d8';
-            document.getElementById(e).style.cursor = 'default';
+            emptyTileNumberStyling(e);
+            removeIncorrectFlag(e);
         }
     }
 }
@@ -336,8 +351,7 @@ checkRightEdge = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#d8d8d8';
-            e.target.style.cursor = 'default';
+            emptyTileEventStyling(e);
         }
     } else {
         if (mattLocations.indexOf(e - 31) >= 0) {
@@ -360,9 +374,10 @@ checkRightEdge = (e) => {
         }
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
+            removeIncorrectFlag(e);
         } else {
-            document.getElementById(e).style.backgroundColor = '#d8d8d8';
-            document.getElementById(e).style.cursor = 'default';
+            emptyTileNumberStyling(e);
+            removeIncorrectFlag(e);
         }
     } 
 }
@@ -400,8 +415,7 @@ checkOtherSquares = (e) => {
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
         } else {
-            e.target.style.backgroundColor = '#d8d8d8';
-            e.target.style.cursor = 'default';
+            emptyTileEventStyling(e);
         }
     } else {
         if (mattLocations.indexOf(e - 31) >= 0) {
@@ -433,10 +447,19 @@ checkOtherSquares = (e) => {
         }
         if (document.getElementById(e) && nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
+            removeIncorrectFlag(e);
         } else if (document.getElementById(e) && nearbymatts === 0) {
-            document.getElementById(e).style.backgroundColor = '#d8d8d8';
-            document.getElementById(e).style.cursor = 'default';
+            emptyTileNumberStyling(e);
+            removeIncorrectFlag(e);
         }
+    }
+}
+
+removeIncorrectFlag =(e) => {
+    if (document.getElementById(e).style.backgroundImage === 'url("icecream-vector-simple-15.png")') {
+        document.getElementById(e).style.backgroundImage = '';
+        mattsRemaining++;
+        updateMattCount();
     }
 }
 
@@ -488,8 +511,8 @@ reset = () => {
     // reset the board, randomize matt locations
     document.getElementById('tryHarder').style.display = 'none';
     document.getElementById('victory').style.display = 'none';
-    mattsRemaining = 99;
-    document.getElementById('remaining').innerHTML = `Matts remaining: ${mattsRemaining}`;
+    mattsRemaining = startingMatts;
+    updateMattCount();
     mattLocations = [];
     squaresChecked = [];
     setMatts();
