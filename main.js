@@ -145,6 +145,7 @@ checkTopLeftCorner = (e) => {
         }
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
+            emptyTileEventStyling(e);
         } else {
             emptyTileEventStyling(e);
         }
@@ -155,7 +156,7 @@ checkTopLeftCorner = (e) => {
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
             removeIncorrectFlag(e);
-            
+            emptyTileNumberStyling(e);
         } else {
             emptyTileNumberStyling(e);
             removeIncorrectFlag(e);
@@ -181,6 +182,7 @@ checkTopRightCorner = (e) => {
         }
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
+            emptyTileEventStyling(e);
         } else {
             emptyTileEventStyling(e);
         }
@@ -191,6 +193,7 @@ checkTopRightCorner = (e) => {
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
             removeIncorrectFlag(e);
+            emptyTileNumberStyling(e);
         } else {
             emptyTileNumberStyling(e);
             removeIncorrectFlag(e);
@@ -216,6 +219,7 @@ checkBottomLeftCorner = (e) => {
         }
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
+            emptyTileEventStyling(e);
         } else {
             emptyTileEventStyling(e);
         }
@@ -227,6 +231,7 @@ checkBottomLeftCorner = (e) => {
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
             removeIncorrectFlag(e);
+            emptyTileNumberStyling(e);
         } else {
             emptyTileNumberStyling(e);
             removeIncorrectFlag(e);
@@ -253,6 +258,7 @@ checkBottomRightCorner = (e) => {
         }
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
+            emptyTileEventStyling(e);
         } else {
             emptyTileEventStyling(e);
         }
@@ -264,6 +270,7 @@ checkBottomRightCorner = (e) => {
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
             removeIncorrectFlag(e);
+            emptyTileNumberStyling(e);
         } else {
             emptyTileNumberStyling(e);
             removeIncorrectFlag(e);
@@ -295,6 +302,7 @@ checkLeftEdge = (e) => {
         }
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
+            emptyTileEventStyling(e);
         } else {
             emptyTileEventStyling(e);
         }
@@ -320,6 +328,7 @@ checkLeftEdge = (e) => {
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
             removeIncorrectFlag(e);
+            emptyTileNumberStyling(e);
         } else {
             emptyTileNumberStyling(e);
             removeIncorrectFlag(e);
@@ -350,6 +359,7 @@ checkRightEdge = (e) => {
         }
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
+            emptyTileEventStyling(e);
         } else {
             emptyTileEventStyling(e);
         }
@@ -375,6 +385,7 @@ checkRightEdge = (e) => {
         if (nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
             removeIncorrectFlag(e);
+            emptyTileNumberStyling(e);
         } else {
             emptyTileNumberStyling(e);
             removeIncorrectFlag(e);
@@ -414,6 +425,7 @@ checkOtherSquares = (e) => {
         }
         if (nearbymatts > 0) {
             e.target.innerHTML = nearbymatts;
+            emptyTileEventStyling(e);
         } else {
             emptyTileEventStyling(e);
         }
@@ -448,6 +460,7 @@ checkOtherSquares = (e) => {
         if (document.getElementById(e) && nearbymatts > 0) {
             document.getElementById(e).innerHTML = nearbymatts;
             removeIncorrectFlag(e);
+            emptyTileNumberStyling(e);
         } else if (document.getElementById(e) && nearbymatts === 0) {
             emptyTileNumberStyling(e);
             removeIncorrectFlag(e);
