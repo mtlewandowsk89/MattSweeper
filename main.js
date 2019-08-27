@@ -8,6 +8,7 @@ let squaresChecked = [];
 // cancel default right click menu
 window.oncontextmenu = () => {return false;}
 
+// wait .1s so the dom has time to render before building the grid
 setTimeout(() => {
     updateMattCount();
     let gridArea = document.getElementById('gridArea');
@@ -18,6 +19,8 @@ setTimeout(() => {
         newDiv.className = 'square';
         newDiv.id = i;
         newDiv.addEventListener('mousedown', (e) => {
+            // get id of square from click event (so we don't need to keep track of the event itself)
+            let squareID = e.target.id;
             // don't allow clicking on flagged square
             if ((e.target.style.backgroundImage == 'url("icecream-vector-simple-15.png")' && e.button !== 2) || 
             (document.getElementById('victory').style.display === 'block') || 
@@ -60,38 +63,7 @@ setTimeout(() => {
                     document.getElementById('tryHarder').style.display = 'block';
                 } else {
                     //Check location of nearby matts
-                    if (+e.target.id === 1) {
-                        checkTopLeftCorner(e);
-                    } else if (+e.target.id === 30) {
-                        checkTopRightCorner(e);
-                    } else if (+e.target.id === 451) {
-                        checkBottomLeftCorner(e);
-                    } else if (+e.target.id === 480) {
-                        checkBottomRightCorner(e);
-                    } else if (leftEdge.indexOf(+e.target.id) >= 0) {
-                        checkLeftEdge(e);
-                    } else if (rightEdge.indexOf(+e.target.id) >= 0) {
-                        checkRightEdge(e);
-                    } else {
-                        checkOtherSquares(e);
-                    }
-                    // set text colors
-                    e.target.style.backgroundColor = '#d8d8d8';
-                    if (e.target.innerHTML === '1') {
-                        e.target.style.color = '#1e1ff2';
-                    } else if (e.target.innerHTML === '2') {
-                        e.target.style.color = '#2a8322';
-                    } else if (e.target.innerHTML === '3') {
-                        e.target.style.color = '#e70d17';
-                    } else if (e.target.innerHTML === '4') {
-                        e.target.style.color = '#000083';
-                    } else if (e.target.innerHTML === '5') {
-                        e.target.style.color = '#7e0306';
-                    } else if (e.target.innerHTML === '6') {
-                        e.target.style.color = '#0e7d8c';
-                    } else {
-                        e.target.style.color = '#000';
-                    }
+                    checkSurroundingTiles([+squareID]);
                 }
             }
         });
@@ -100,8 +72,8 @@ setTimeout(() => {
     setMatts();
 }, 100);
 
+// set 99 matts (expert difficulty)
 setMatts = () => {
-    // set 99 matts (expert difficulty)
     for (i = 1; i <= startingMatts; i++) {
         let matt = Math.floor(Math.random() * 480) + 1;
         if (mattLocations.indexOf(matt) >= 0) {
@@ -114,21 +86,18 @@ setMatts = () => {
     }
 }
 
+// update remaining Matt counter at the top
 updateMattCount = () => {
     document.getElementById('remaining').innerHTML = `Matts remaining: ${mattsRemaining}`;
 }
 
-emptyTileEventStyling = (e) => {
-    e.target.style.backgroundColor = '#d8d8d8';
-    e.target.style.cursor = 'default';
+// style squares that have already been clicked on
+emptyTileNumberStyling = (squareID) => {
+    document.getElementById(squareID).style.backgroundColor = '#d8d8d8';
+    document.getElementById(squareID).style.cursor = 'default';
 }
 
-emptyTileNumberStyling = (e) => {
-    document.getElementById(e).style.backgroundColor = '#d8d8d8';
-    document.getElementById(e).style.cursor = 'default';
-}
-
-checkTopLeftCorner = (e) => {
+checkTopLeftCorner = (squareID) => {
     let nearbymatts = 0;
     if (mattLocations.indexOf(2) >= 0) {
         nearbymatts++;
@@ -139,32 +108,21 @@ checkTopLeftCorner = (e) => {
     if (mattLocations.indexOf(32) >= 0) {
         nearbymatts++;
     }
-    if (e.target) {
-        if (nearbymatts === 0) {
-            checkForMoreZeros([2, 31, 32]);
-        }
-        if (nearbymatts > 0) {
-            e.target.innerHTML = nearbymatts;
-            emptyTileEventStyling(e);
-        } else {
-            emptyTileEventStyling(e);
-        }
-    } else {
-        if (nearbymatts === 0 && e <= 480 && e > 0) {
-            checkForMoreZeros([2, 31, 32]);
-        }
-        if (nearbymatts > 0) {
-            document.getElementById(e).innerHTML = nearbymatts;
-            removeIncorrectFlag(e);
-            emptyTileNumberStyling(e);
-        } else {
-            emptyTileNumberStyling(e);
-            removeIncorrectFlag(e);
-        }
+    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
+        checkSurroundingTiles([2, 31, 32]);
     }
+    if (nearbymatts > 0) {
+        document.getElementById(squareID).innerHTML = nearbymatts;
+        removeIncorrectFlag(squareID);
+        emptyTileNumberStyling(squareID);
+    } else {
+        emptyTileNumberStyling(squareID);
+        removeIncorrectFlag(squareID);
+    }
+    
 }
 
-checkTopRightCorner = (e) => {
+checkTopRightCorner = (squareID) => {
     let nearbymatts = 0;
     if (mattLocations.indexOf(29) >= 0) {
         nearbymatts++;
@@ -175,33 +133,20 @@ checkTopRightCorner = (e) => {
     if (mattLocations.indexOf(60) >= 0) {
         nearbymatts++;
     }
-
-    if (e.target) {
-        if (nearbymatts === 0) {
-            checkForMoreZeros([29, 59, 60]);
-        }
-        if (nearbymatts > 0) {
-            e.target.innerHTML = nearbymatts;
-            emptyTileEventStyling(e);
-        } else {
-            emptyTileEventStyling(e);
-        }
+    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
+        checkSurroundingTiles([29, 59, 60]);
+    }
+    if (nearbymatts > 0) {
+        document.getElementById(squareID).innerHTML = nearbymatts;
+        removeIncorrectFlag(squareID);
+        emptyTileNumberStyling(squareID);
     } else {
-        if (nearbymatts === 0 && e <= 480 && e > 0) {
-            checkForMoreZeros([29, 59, 60]);
-        }
-        if (nearbymatts > 0) {
-            document.getElementById(e).innerHTML = nearbymatts;
-            removeIncorrectFlag(e);
-            emptyTileNumberStyling(e);
-        } else {
-            emptyTileNumberStyling(e);
-            removeIncorrectFlag(e);
-        }
+        emptyTileNumberStyling(squareID);
+        removeIncorrectFlag(squareID);
     }
 }
 
-checkBottomLeftCorner = (e) => {
+checkBottomLeftCorner = (squareID) => {
     let nearbymatts = 0;
     if (mattLocations.indexOf(421) >= 0) {
         nearbymatts++;
@@ -212,35 +157,20 @@ checkBottomLeftCorner = (e) => {
     if (mattLocations.indexOf(452) >= 0) {
         nearbymatts++;
     }
-
-    if (e.target) {
-        if (nearbymatts === 0) {
-            checkForMoreZeros([421, 422, 452]);
-        }
-        if (nearbymatts > 0) {
-            e.target.innerHTML = nearbymatts;
-            emptyTileEventStyling(e);
-        } else {
-            emptyTileEventStyling(e);
-        }
-        
+    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
+        checkSurroundingTiles([421, 422, 452]);
+    }
+    if (nearbymatts > 0) {
+        document.getElementById(squareID).innerHTML = nearbymatts;
+        removeIncorrectFlag(squareID);
+        emptyTileNumberStyling(squareID);
     } else {
-        if (nearbymatts === 0 && e <= 480 && e > 0) {
-            checkForMoreZeros([421, 422, 452]);
-        }
-        if (nearbymatts > 0) {
-            document.getElementById(e).innerHTML = nearbymatts;
-            removeIncorrectFlag(e);
-            emptyTileNumberStyling(e);
-        } else {
-            emptyTileNumberStyling(e);
-            removeIncorrectFlag(e);
-        }
-        
+        emptyTileNumberStyling(squareID);
+        removeIncorrectFlag(squareID);
     }
 }
 
-checkBottomRightCorner = (e) => {
+checkBottomRightCorner = (squareID) => {
     let nearbymatts = 0;
     if (mattLocations.indexOf(449) >= 0) {
         nearbymatts++;
@@ -251,232 +181,129 @@ checkBottomRightCorner = (e) => {
     if (mattLocations.indexOf(479) >= 0) {
         nearbymatts++;
     }
-    
-    if (e.target) {
-        if (nearbymatts === 0) {
-            checkForMoreZeros([449, 450, 479]);
-        }
-        if (nearbymatts > 0) {
-            e.target.innerHTML = nearbymatts;
-            emptyTileEventStyling(e);
-        } else {
-            emptyTileEventStyling(e);
-        }
-        
+    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
+        checkSurroundingTiles([449, 450, 479]);
+    }
+    if (nearbymatts > 0) {
+        document.getElementById(squareID).innerHTML = nearbymatts;
+        removeIncorrectFlag(squareID);
+        emptyTileNumberStyling(squareID);
     } else {
-        if (nearbymatts === 0 && e <= 480 && e > 0) {
-            checkForMoreZeros([449, 450, 479]);
-        }
-        if (nearbymatts > 0) {
-            document.getElementById(e).innerHTML = nearbymatts;
-            removeIncorrectFlag(e);
-            emptyTileNumberStyling(e);
-        } else {
-            emptyTileNumberStyling(e);
-            removeIncorrectFlag(e);
-        }
-        
+        emptyTileNumberStyling(squareID);
+        removeIncorrectFlag(squareID);
     }
 }
 
-checkLeftEdge = (e) => {
+checkLeftEdge = (squareID) => {
     let nearbymatts = 0;
-    if (e.target) {
-        if (mattLocations.indexOf(+e.target.id - 30) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id - 29) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id + 1) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id + 30) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id + 31) >= 0) {
-            nearbymatts++;
-        }
-        if (nearbymatts === 0) {
-            checkForMoreZeros([+e.target.id - 30, +e.target.id - 29, +e.target.id + 1, +e.target.id + 30, +e.target.id + 31]);
-        }
-        if (nearbymatts > 0) {
-            e.target.innerHTML = nearbymatts;
-            emptyTileEventStyling(e);
-        } else {
-            emptyTileEventStyling(e);
-        }
+    if (mattLocations.indexOf(squareID - 30) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID - 29) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID + 1) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID + 30) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID + 31) >= 0) {
+        nearbymatts++;
+    }
+    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
+        checkSurroundingTiles([squareID - 30, squareID - 29, squareID + 1, squareID + 30, squareID + 31]);
+    }
+    if (nearbymatts > 0) {
+        document.getElementById(squareID).innerHTML = nearbymatts;
+        removeIncorrectFlag(squareID);
+        emptyTileNumberStyling(squareID);
     } else {
-        if (mattLocations.indexOf(e - 30) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e - 29) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e + 1) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e + 30) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e + 31) >= 0) {
-            nearbymatts++;
-        }
-        if (nearbymatts === 0 && e <= 480 && e > 0) {
-            checkForMoreZeros([e - 30, e - 29, e + 1, e + 30, e + 31]);
-        }
-        if (nearbymatts > 0) {
-            document.getElementById(e).innerHTML = nearbymatts;
-            removeIncorrectFlag(e);
-            emptyTileNumberStyling(e);
-        } else {
-            emptyTileNumberStyling(e);
-            removeIncorrectFlag(e);
-        }
+        emptyTileNumberStyling(squareID);
+        removeIncorrectFlag(squareID);
     }
 }
 
-checkRightEdge = (e) => {
+checkRightEdge = (squareID) => {
     let nearbymatts = 0;
-    if (e.target) {
-        if (mattLocations.indexOf(+e.target.id - 31) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id - 30) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id - 1) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id + 29) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id + 30) >= 0) {
-            nearbymatts++;
-        }
-        if (nearbymatts === 0) {
-            checkForMoreZeros([+e.target.id - 31, +e.target.id - 30, +e.target.id - 1, +e.target.id + 29, +e.target.id + 30]);
-        }
-        if (nearbymatts > 0) {
-            e.target.innerHTML = nearbymatts;
-            emptyTileEventStyling(e);
-        } else {
-            emptyTileEventStyling(e);
-        }
+    if (mattLocations.indexOf(squareID - 31) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID - 30) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID - 1) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID + 29) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID + 30) >= 0) {
+        nearbymatts++;
+    }
+    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
+        checkSurroundingTiles([squareID - 31, squareID - 30, squareID - 1, squareID + 29, squareID + 30]);
+    }
+    if (nearbymatts > 0) {
+        document.getElementById(squareID).innerHTML = nearbymatts;
+        removeIncorrectFlag(squareID);
+        emptyTileNumberStyling(squareID);
     } else {
-        if (mattLocations.indexOf(e - 31) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e - 30) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e - 1) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e + 29) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e + 30) >= 0) {
-            nearbymatts++;
-        }
-        if (nearbymatts === 0 && e <= 480 && e > 0) {
-            checkForMoreZeros([e - 31, e - 30, e - 1, e + 29, e + 30]);
-        }
-        if (nearbymatts > 0) {
-            document.getElementById(e).innerHTML = nearbymatts;
-            removeIncorrectFlag(e);
-            emptyTileNumberStyling(e);
-        } else {
-            emptyTileNumberStyling(e);
-            removeIncorrectFlag(e);
-        }
-    } 
-}
-
-checkOtherSquares = (e) => {
-    let nearbymatts = 0;
-    if (e.target) {
-        if (mattLocations.indexOf(+e.target.id - 31) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id - 30) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id - 29) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id - 1) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id + 1) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id + 29) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id + 30) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(+e.target.id + 31) >= 0) {
-            nearbymatts++;
-        }
-        if (nearbymatts === 0) {
-            checkForMoreZeros([+e.target.id - 31, +e.target.id - 30, +e.target.id - 29, +e.target.id - 1, +e.target.id + 1, +e.target.id + 29, +e.target.id + 30, +e.target.id + 31]);
-        }
-        if (nearbymatts > 0) {
-            e.target.innerHTML = nearbymatts;
-            emptyTileEventStyling(e);
-        } else {
-            emptyTileEventStyling(e);
-        }
-    } else {
-        if (mattLocations.indexOf(e - 31) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e - 30) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e - 29) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e - 1) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e + 1) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e + 29) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e + 30) >= 0) {
-            nearbymatts++;
-        }
-        if (mattLocations.indexOf(e + 31) >= 0) {
-            nearbymatts++;
-        }
-        if (nearbymatts === 0 && e <= 480 && e > 0) {
-            checkForMoreZeros([e - 31, e - 30, e - 29, e - 1, e + 1, e + 29, e + 30, e + 31]);
-        }
-        if (document.getElementById(e) && nearbymatts > 0) {
-            document.getElementById(e).innerHTML = nearbymatts;
-            removeIncorrectFlag(e);
-            emptyTileNumberStyling(e);
-        } else if (document.getElementById(e) && nearbymatts === 0) {
-            emptyTileNumberStyling(e);
-            removeIncorrectFlag(e);
-        }
+        emptyTileNumberStyling(squareID);
+        removeIncorrectFlag(squareID);
     }
 }
 
-removeIncorrectFlag =(e) => {
-    if (document.getElementById(e).style.backgroundImage === 'url("icecream-vector-simple-15.png")') {
-        document.getElementById(e).style.backgroundImage = '';
+checkOtherSquares = (squareID) => {
+    let nearbymatts = 0;
+    if (mattLocations.indexOf(squareID - 31) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID - 30) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID - 29) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID - 1) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID + 1) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID + 29) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID + 30) >= 0) {
+        nearbymatts++;
+    }
+    if (mattLocations.indexOf(squareID + 31) >= 0) {
+        nearbymatts++;
+    }
+    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
+        checkSurroundingTiles([squareID - 31, squareID - 30, squareID - 29, squareID - 1, squareID + 1, squareID + 29, squareID + 30, squareID + 31]);
+    }
+    if (document.getElementById(squareID) && nearbymatts > 0) {
+        document.getElementById(squareID).innerHTML = nearbymatts;
+        removeIncorrectFlag(squareID);
+        emptyTileNumberStyling(squareID);
+    } else if (document.getElementById(squareID) && nearbymatts === 0) {
+        emptyTileNumberStyling(squareID);
+        removeIncorrectFlag(squareID);
+    }
+}
+
+// remove flag and increment remaining Matts counter if that space is filled in by clicking on adjacent empty square and flag was incorrectly placed
+removeIncorrectFlag =(squareID) => {
+    if (document.getElementById(squareID).style.backgroundImage === 'url("icecream-vector-simple-15.png")') {
+        document.getElementById(squareID).style.backgroundImage = '';
         mattsRemaining++;
         updateMattCount();
     }
 }
 
-checkForMoreZeros = (squaresToCheck) => {
+// check all squares touching the square that was clicked on or the square that was dynamically clicked
+checkSurroundingTiles = (squaresToCheck) => {
     squaresToCheck.forEach((square) => {
         if (squaresChecked.indexOf(square) === -1) {
             // keep track of which squares already checked
@@ -520,8 +347,8 @@ checkForMoreZeros = (squaresToCheck) => {
     })
 }
 
+// reset the board, randomize matt locations, reset styles, hide win/lose messages
 reset = () => {
-    // reset the board, randomize matt locations
     document.getElementById('tryHarder').style.display = 'none';
     document.getElementById('victory').style.display = 'none';
     mattsRemaining = startingMatts;
