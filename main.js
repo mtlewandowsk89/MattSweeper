@@ -1,28 +1,122 @@
+const flagImage = 'url("icecream-vector-simple-15.png")';
+const mineImage = 'url("./try_harder.png")';
+let firstClick = true;
 let mattLocations = [];
-let leftEdge = [31, 61, 91, 121, 151, 181, 211, 241, 271, 301, 331, 361, 391, 421];
-let rightEdge = [60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450];
-let startingMatts = 99;
-let mattsRemaining = 99;
 let squaresChecked = [];
+let startingMatts;
+let mattsRemaining;
+let leftEdge;
+let rightEdge;
+let topLeftCorner;
+let topRightCorner;
+let bottomLeftCorner;
+let bottomRightCorner;
+let edgeIntervals;
+let surroundingTileCheck;
+let lastSquare;
 
 // cancel default right click menu
 window.oncontextmenu = () => {return false;}
 
-// wait .1s so the dom has time to render before building the grid
-setTimeout(() => {
+// load beginner difficulty after DOM has had a chance to load.
+setTimeout(difficultyChange = () => {
+    let difficulty = document.getElementById('difficulty').value;
+
+    const gridArea = document.getElementById('gridArea');
+    while (gridArea.hasChildNodes()) {
+        gridArea.removeChild(gridArea.firstChild);
+    }
+
+    switch(difficulty) {
+        case 'beginner':
+            startingMatts = 10;
+            mattsRemaining = 10;
+            leftEdge = [10, 19, 28, 37, 46, 55, 64];
+            rightEdge = [18, 27, 36, 45, 54, 63, 72];
+            topLeftCorner = [2, 10, 11];
+            topRightCorner = [8, 17, 18];
+            bottomLeftCorner = [64, 65, 74];
+            bottomRightCorner = [71, 72, 80];
+            edgeIntervals = [1, 8, 9, 10];
+            surroundingTileCheck = [1, 9, 73, 81];
+            lastSquare = 81;
+            gridArea.classList.add('beginnerGrid');
+            gridArea.classList.remove('expertGrid');
+            gridArea.classList.remove('intermediateGrid');
+            gridArea.classList.remove('masterGrid');
+            break;
+        case 'intermediate':
+            startingMatts = 40;
+            mattsRemaining = 40;
+            leftEdge = [17, 33, 49, 65, 81, 97, 113, 129, 145, 161, 177, 193, 209, 225];
+            rightEdge = [32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240];
+            topLeftCorner = [2, 17, 18];
+            topRightCorner = [15, 31, 32];
+            bottomLeftCorner = [225, 226, 242];
+            bottomRightCorner = [239, 240, 255];
+            edgeIntervals = [1, 15, 16, 17];
+            surroundingTileCheck = [1, 16, 241, 256];
+            lastSquare = 256;
+            gridArea.classList.add('intermediateGrid');
+            gridArea.classList.remove('expertGrid');
+            gridArea.classList.remove('beginnerGrid');
+            gridArea.classList.remove('masterGrid');
+            break;
+        case 'expert':
+            startingMatts = 99;
+            mattsRemaining = 99;
+            leftEdge = [31, 61, 91, 121, 151, 181, 211, 241, 271, 301, 331, 361, 391, 421];
+            rightEdge = [60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450];
+            topLeftCorner = [2, 31, 32];
+            topRightCorner = [29, 59, 60];
+            bottomLeftCorner = [421, 422, 452];
+            bottomRightCorner = [449, 450, 479];
+            edgeIntervals = [1, 29, 30, 31];
+            surroundingTileCheck = [1, 30, 451, 480];
+            lastSquare = 480;
+            gridArea.classList.add('expertGrid');
+            gridArea.classList.remove('beginnerGrid');
+            gridArea.classList.remove('intermediateGrid');
+            gridArea.classList.remove('masterGrid');
+            break;
+        case 'master':
+            startingMatts = 200;
+            mattsRemaining = 200;
+            leftEdge = [31, 61, 91, 121, 151, 181, 211, 241, 271, 301, 331, 361, 391, 421, 451, 481, 511, 541, 571, 601, 631, 661];
+            rightEdge = [60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 510, 540, 570, 600, 630, 660, 690];
+            topLeftCorner = [2, 31, 32];
+            topRightCorner = [29, 59, 60];
+            bottomLeftCorner = [661, 662, 692];
+            bottomRightCorner = [689, 690, 719];
+            edgeIntervals = [1, 29, 30, 31];
+            surroundingTileCheck = [1, 30, 691, 720];
+            lastSquare = 720;
+            gridArea.classList.add('masterGrid');
+            gridArea.classList.remove('expertGrid');
+            gridArea.classList.remove('beginnerGrid');
+            gridArea.classList.remove('intermediateGrid');
+            break;
+    }
+
+    reset(true);
+    setup();
+}, 0);
+
+setup = () => {
     updateMattCount();
-    let gridArea = document.getElementById('gridArea');
-    // Create 30 x 16 game grid
-    for (i = 1; i <= 480; i++) {
+    const gridArea = document.getElementById('gridArea');
+    // Create game grid
+    for (i = 1; i <= lastSquare; i++) {
         // Add class, id, and click event to each square
-        let newDiv = document.createElement('div');
+        const newDiv = document.createElement('div');
         newDiv.className = 'square';
         newDiv.id = i;
+        // adding click event to each tile
         newDiv.addEventListener('mousedown', (e) => {
             // get id of square from click event (so we don't need to keep track of the event itself)
-            let squareID = e.target.id;
+            const squareID = e.target.id;
             // don't allow clicking on flagged square
-            if ((e.target.style.backgroundImage == 'url("icecream-vector-simple-15.png")' && e.button !== 2) || 
+            if ((e.target.style.backgroundImage == flagImage && e.button !== 2) || 
             (document.getElementById('victory').style.display === 'block') || 
             (document.getElementById('tryHarder').style.display === 'block')) {
                 return;
@@ -30,54 +124,56 @@ setTimeout(() => {
             // Matt identified
             if (e.button === 2) {
                 if (e.target.style.backgroundColor !== 'rgb(216, 216, 216)') {
-                    let correctFlags = 0;
-                    if (e.target.style.backgroundImage == 'url("icecream-vector-simple-15.png")') {
+                    if (e.target.style.backgroundImage == flagImage) {
                         e.target.style.backgroundImage = '';
                         mattsRemaining++;
-                    // only allow 99 flags
+                    // only allow max number of flags
                     } else if (mattsRemaining > 0 && e.target.innerHTML === '') {
-                        e.target.style.backgroundImage = 'url("icecream-vector-simple-15.png")';
+                        e.target.style.backgroundImage = flagImage;
                         mattsRemaining--;
                     }
                     updateMattCount();
-                    //check how many flags are correct
-                    mattLocations.forEach((matt) => {
-                        if (document.getElementById(matt).style.backgroundImage == 'url("icecream-vector-simple-15.png")') {
-                            correctFlags++;
-                        }
-                    })
-                    // if all flags are correct
-                    if (correctFlags === startingMatts) {
-                        document.getElementById('victory').style.display = 'block';
-                    }
                 }
             } else {
+                const mattIndex = mattLocations.indexOf(+e.target.id);
                 // Matt clicked
-                if (mattLocations.indexOf(+e.target.id) >= 0) {
-                    // display all matt locations
-                    mattLocations.forEach((matt) => {
-                        document.getElementById(matt).style.backgroundImage = 'url("./try_harder.png")';
-                    })
-                    mattsRemaining = 0;
-                    updateMattCount();
-                    document.getElementById('tryHarder').style.display = 'block';
+                if (mattIndex >= 0) {
+                    // you can only lose if you click a matt on a turn after your first
+                    if (!firstClick) {
+                        // display all matt locations
+                        mattLocations.forEach((matt) => {
+                            document.getElementById(matt).style.backgroundImage = mineImage;
+                        })
+                        mattsRemaining = 0;
+                        updateMattCount();
+                        document.getElementById('tryHarder').style.display = 'block';
+                    } else {
+                        // remove the 1 matt that was clicked on and pick a new random location
+                        mattLocations.splice(mattIndex, 1);
+                        setMatts(1);
+                        //Check location of nearby matts
+                        checkSurroundingTiles([+squareID]); 
+                    }
                 } else {
                     //Check location of nearby matts
-                    checkSurroundingTiles([+squareID]);
+                    checkSurroundingTiles([+squareID]); 
                 }
+
+                // no longer the first click
+                firstClick = false;
             }
         });
         gridArea.appendChild(newDiv);
     };
     setMatts();
-}, 100);
+}
 
-// set 99 matts (expert difficulty)
-setMatts = () => {
-    for (i = 1; i <= startingMatts; i++) {
-        let matt = Math.floor(Math.random() * 480) + 1;
+// set matts
+setMatts = (numberToSet = 0) => {
+    for (i = 1; i <= (numberToSet || startingMatts); i++) {
+        const matt = Math.floor(Math.random() * lastSquare) + 1;
         if (mattLocations.indexOf(matt) >= 0) {
-            // If already a matt at that square, reduce incrementor and loop through again so we end up with 99 matts.
+            // If already a matt at that square, reduce incrementor and loop through again so we end up with correct # of matts.
             i--;
         } else {
             // If no matt at that square, add one.
@@ -97,47 +193,18 @@ emptyTileNumberStyling = (squareID) => {
     document.getElementById(squareID).style.cursor = 'default';
 }
 
-checkTopLeftCorner = (squareID) => {
-    let nearbymatts = 0;
-    if (mattLocations.indexOf(2) >= 0) {
-        nearbymatts++;
+checkCorner = (squareID, corner) => {
+    let nearbyMatts = 0;
+    corner.forEach((cornerTile) => {
+        if (mattLocations.indexOf(cornerTile) >= 0) {
+            nearbyMatts++
+        }
+    })
+    if (nearbyMatts === 0 && squareID <= lastSquare && squareID > 0) {
+        checkSurroundingTiles(corner);
     }
-    if (mattLocations.indexOf(31) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(32) >= 0) {
-        nearbymatts++;
-    }
-    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
-        checkSurroundingTiles([2, 31, 32]);
-    }
-    if (nearbymatts > 0) {
-        document.getElementById(squareID).innerHTML = nearbymatts;
-        removeIncorrectFlag(squareID);
-        emptyTileNumberStyling(squareID);
-    } else {
-        emptyTileNumberStyling(squareID);
-        removeIncorrectFlag(squareID);
-    }
-    
-}
-
-checkTopRightCorner = (squareID) => {
-    let nearbymatts = 0;
-    if (mattLocations.indexOf(29) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(59) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(60) >= 0) {
-        nearbymatts++;
-    }
-    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
-        checkSurroundingTiles([29, 59, 60]);
-    }
-    if (nearbymatts > 0) {
-        document.getElementById(squareID).innerHTML = nearbymatts;
+    if (nearbyMatts > 0) {
+        document.getElementById(squareID).innerHTML = nearbyMatts;
         removeIncorrectFlag(squareID);
         emptyTileNumberStyling(squareID);
     } else {
@@ -146,106 +213,18 @@ checkTopRightCorner = (squareID) => {
     }
 }
 
-checkBottomLeftCorner = (squareID) => {
-    let nearbymatts = 0;
-    if (mattLocations.indexOf(421) >= 0) {
-        nearbymatts++;
+checkEdge = (squareID, edgeCheck) => {
+    let nearbyMatts = 0;
+    edgeCheck.forEach((edge) => {
+        if (mattLocations.indexOf(edge) >= 0) {
+            nearbyMatts++;
+        }
+    })
+    if (nearbyMatts === 0 && squareID <= lastSquare && squareID > 0) {
+        checkSurroundingTiles(edgeCheck);
     }
-    if (mattLocations.indexOf(422) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(452) >= 0) {
-        nearbymatts++;
-    }
-    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
-        checkSurroundingTiles([421, 422, 452]);
-    }
-    if (nearbymatts > 0) {
-        document.getElementById(squareID).innerHTML = nearbymatts;
-        removeIncorrectFlag(squareID);
-        emptyTileNumberStyling(squareID);
-    } else {
-        emptyTileNumberStyling(squareID);
-        removeIncorrectFlag(squareID);
-    }
-}
-
-checkBottomRightCorner = (squareID) => {
-    let nearbymatts = 0;
-    if (mattLocations.indexOf(449) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(450) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(479) >= 0) {
-        nearbymatts++;
-    }
-    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
-        checkSurroundingTiles([449, 450, 479]);
-    }
-    if (nearbymatts > 0) {
-        document.getElementById(squareID).innerHTML = nearbymatts;
-        removeIncorrectFlag(squareID);
-        emptyTileNumberStyling(squareID);
-    } else {
-        emptyTileNumberStyling(squareID);
-        removeIncorrectFlag(squareID);
-    }
-}
-
-checkLeftEdge = (squareID) => {
-    let nearbymatts = 0;
-    if (mattLocations.indexOf(squareID - 30) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID - 29) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID + 1) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID + 30) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID + 31) >= 0) {
-        nearbymatts++;
-    }
-    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
-        checkSurroundingTiles([squareID - 30, squareID - 29, squareID + 1, squareID + 30, squareID + 31]);
-    }
-    if (nearbymatts > 0) {
-        document.getElementById(squareID).innerHTML = nearbymatts;
-        removeIncorrectFlag(squareID);
-        emptyTileNumberStyling(squareID);
-    } else {
-        emptyTileNumberStyling(squareID);
-        removeIncorrectFlag(squareID);
-    }
-}
-
-checkRightEdge = (squareID) => {
-    let nearbymatts = 0;
-    if (mattLocations.indexOf(squareID - 31) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID - 30) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID - 1) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID + 29) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID + 30) >= 0) {
-        nearbymatts++;
-    }
-    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
-        checkSurroundingTiles([squareID - 31, squareID - 30, squareID - 1, squareID + 29, squareID + 30]);
-    }
-    if (nearbymatts > 0) {
-        document.getElementById(squareID).innerHTML = nearbymatts;
+    if (nearbyMatts > 0) {
+        document.getElementById(squareID).innerHTML = nearbyMatts;
         removeIncorrectFlag(squareID);
         emptyTileNumberStyling(squareID);
     } else {
@@ -255,39 +234,23 @@ checkRightEdge = (squareID) => {
 }
 
 checkOtherSquares = (squareID) => {
-    let nearbymatts = 0;
-    if (mattLocations.indexOf(squareID - 31) >= 0) {
-        nearbymatts++;
+    let nearbyMatts = 0;
+    edgeIntervals.forEach((interval) => {
+        if (mattLocations.indexOf(squareID - interval) >= 0) {
+            nearbyMatts++;
+        }
+        if (mattLocations.indexOf(squareID + interval) >= 0) {
+            nearbyMatts++;
+        }
+    })
+    if (nearbyMatts === 0 && squareID <= lastSquare && squareID > 0) {
+        checkSurroundingTiles([squareID - edgeIntervals[3], squareID - edgeIntervals[2], squareID - edgeIntervals[1], squareID - edgeIntervals[0], squareID + edgeIntervals[0], squareID + edgeIntervals[1], squareID + edgeIntervals[2], squareID + edgeIntervals[3]]);
     }
-    if (mattLocations.indexOf(squareID - 30) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID - 29) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID - 1) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID + 1) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID + 29) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID + 30) >= 0) {
-        nearbymatts++;
-    }
-    if (mattLocations.indexOf(squareID + 31) >= 0) {
-        nearbymatts++;
-    }
-    if (nearbymatts === 0 && squareID <= 480 && squareID > 0) {
-        checkSurroundingTiles([squareID - 31, squareID - 30, squareID - 29, squareID - 1, squareID + 1, squareID + 29, squareID + 30, squareID + 31]);
-    }
-    if (document.getElementById(squareID) && nearbymatts > 0) {
-        document.getElementById(squareID).innerHTML = nearbymatts;
+    if (document.getElementById(squareID) && nearbyMatts > 0) {
+        document.getElementById(squareID).innerHTML = nearbyMatts;
         removeIncorrectFlag(squareID);
         emptyTileNumberStyling(squareID);
-    } else if (document.getElementById(squareID) && nearbymatts === 0) {
+    } else if (document.getElementById(squareID) && nearbyMatts === 0) {
         emptyTileNumberStyling(squareID);
         removeIncorrectFlag(squareID);
     }
@@ -295,7 +258,7 @@ checkOtherSquares = (squareID) => {
 
 // remove flag and increment remaining Matts counter if that space is filled in by clicking on adjacent empty square and flag was incorrectly placed
 removeIncorrectFlag =(squareID) => {
-    if (document.getElementById(squareID).style.backgroundImage === 'url("icecream-vector-simple-15.png")') {
+    if (document.getElementById(squareID).style.backgroundImage === flagImage) {
         document.getElementById(squareID).style.backgroundImage = '';
         mattsRemaining++;
         updateMattCount();
@@ -307,19 +270,29 @@ checkSurroundingTiles = (squaresToCheck) => {
     squaresToCheck.forEach((square) => {
         if (squaresChecked.indexOf(square) === -1) {
             // keep track of which squares already checked
-            squaresChecked.push(square);
-            if (square === 1) {
-                checkTopLeftCorner(square);
-            } else if (square === 30) {
-                checkTopRightCorner(square);
-            } else if (square === 451) {
-                checkBottomLeftCorner(square);
-            } else if (square === 480) {
-                checkBottomRightCorner(square);
+            if (square > 0 && square <= lastSquare) {
+                squaresChecked.push(square);
+            }
+           
+            // if all non-matts are clicked (you win!)
+            if (squaresChecked.length === (lastSquare - startingMatts)) {
+                youWin();
+            }
+
+            if (square === surroundingTileCheck[0]) {
+                checkCorner(square, topLeftCorner);
+            } else if (square === surroundingTileCheck[1]) {
+                checkCorner(square, topRightCorner);
+            } else if (square === surroundingTileCheck[2]) {
+                checkCorner(square, bottomLeftCorner);
+            } else if (square === surroundingTileCheck[3]) {
+                checkCorner(square, bottomRightCorner);
             } else if (leftEdge.indexOf(square) >= 0) {
-                checkLeftEdge(square);
+                // includes array of tiles along the left edge to check
+                checkEdge(square, [square - edgeIntervals[2], square - edgeIntervals[1], square + edgeIntervals[0], square + edgeIntervals[2], square + edgeIntervals[3]]);
             } else if (rightEdge.indexOf(square) >= 0) {
-                checkRightEdge(square);
+                // includes array of tiles along the right edge to check
+                checkEdge(square, [square - edgeIntervals[3], square - edgeIntervals[2], square - edgeIntervals[0], square + edgeIntervals[1], square + edgeIntervals[2]]);
             } else {
                 checkOtherSquares(square);
             }
@@ -347,16 +320,23 @@ checkSurroundingTiles = (squaresToCheck) => {
     })
 }
 
+youWin = () => {
+    document.getElementById('victory').style.display = 'block';
+}
+
 // reset the board, randomize matt locations, reset styles, hide win/lose messages
-reset = () => {
+reset = (skip) => {
     document.getElementById('tryHarder').style.display = 'none';
     document.getElementById('victory').style.display = 'none';
     mattsRemaining = startingMatts;
+    firstClick = true;
     updateMattCount();
     mattLocations = [];
     squaresChecked = [];
-    setMatts();
-    let squares = document.getElementsByClassName('square');
+    if (!skip) {
+        setMatts();
+    }
+    const squares = document.getElementsByClassName('square');
     Array.from(squares).forEach((square) => {
         square.style.backgroundImage = '';
         square.innerHTML = '';

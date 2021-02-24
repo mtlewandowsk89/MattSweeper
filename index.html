@@ -12,7 +12,13 @@
 <body>
     <div class="topSection">
         <h3 id="remaining"></h3>
-        <div id="reset" onclick="reset()">Reset</div>
+        <div id="reset" onclick="reset(false)">Reset</div>
+        <select id="difficulty" onchange="difficultyChange()">
+            <option value="beginner" selected>Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="expert">Expert</option>
+            <option value="master">Master</option>
+        </select>
     </div>
     <section id="gridArea"></section>
     <h1 id="tryHarder">Try harder next time!</h1>

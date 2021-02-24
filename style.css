@@ -5,7 +5,7 @@ body {
 
 .topSection {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     margin-bottom: 20px;
 }
 
@@ -19,13 +19,34 @@ body {
     font-weight: bold;
 }
 
-#gridArea {
-    display: grid;
-    width: 750px;
-    height: 380px;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr
+#difficulty {
+    height: 30px;
+    place-self: center;
+    border: 2px solid black;
+    border-radius: 20px;
+    padding: 5px;
 }
 
+#difficulty:focus {
+    outline: none;
+}
+ 
+#gridArea {
+    display: grid;
+}
+
+.beginnerGrid {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.intermediateGrid {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.expertGrid, .masterGrid {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+ 
 .square {
     text-align: center;
     background-color: #bdbdbd;
