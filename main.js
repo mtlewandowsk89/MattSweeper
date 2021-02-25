@@ -1,5 +1,5 @@
-const flagImage = 'url("./flag.png")';
-const mineImage = 'url("./mine.png")';
+const flagImage = 'url("./flag.PNG")';
+const mineImage = 'url("./mine.PNG")';
 let firstClick = true;
 let mineLocations = [];
 let squaresChecked = [];
