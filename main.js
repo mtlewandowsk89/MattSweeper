@@ -1,10 +1,10 @@
-const flagImage = 'url("icecream-vector-simple-15.png")';
-const mineImage = 'url("./try_harder.png")';
+const flagImage = 'url("./flag.png")';
+const mineImage = 'url("./mine.png")';
 let firstClick = true;
-let mattLocations = [];
+let mineLocations = [];
 let squaresChecked = [];
-let startingMatts;
-let mattsRemaining;
+let startingMines;
+let minesRemaining;
 let leftEdge;
 let rightEdge;
 let topLeftCorner;
@@ -29,8 +29,8 @@ setTimeout(difficultyChange = () => {
 
     switch(difficulty) {
         case 'beginner':
-            startingMatts = 10;
-            mattsRemaining = 10;
+            startingMines = 10;
+            minesRemaining = 10;
             leftEdge = [10, 19, 28, 37, 46, 55, 64];
             rightEdge = [18, 27, 36, 45, 54, 63, 72];
             topLeftCorner = [2, 10, 11];
@@ -46,8 +46,8 @@ setTimeout(difficultyChange = () => {
             gridArea.classList.remove('masterGrid');
             break;
         case 'intermediate':
-            startingMatts = 40;
-            mattsRemaining = 40;
+            startingMines = 40;
+            minesRemaining = 40;
             leftEdge = [17, 33, 49, 65, 81, 97, 113, 129, 145, 161, 177, 193, 209, 225];
             rightEdge = [32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240];
             topLeftCorner = [2, 17, 18];
@@ -63,8 +63,8 @@ setTimeout(difficultyChange = () => {
             gridArea.classList.remove('masterGrid');
             break;
         case 'expert':
-            startingMatts = 99;
-            mattsRemaining = 99;
+            startingMines = 99;
+            minesRemaining = 99;
             leftEdge = [31, 61, 91, 121, 151, 181, 211, 241, 271, 301, 331, 361, 391, 421];
             rightEdge = [60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450];
             topLeftCorner = [2, 31, 32];
@@ -80,8 +80,8 @@ setTimeout(difficultyChange = () => {
             gridArea.classList.remove('masterGrid');
             break;
         case 'master':
-            startingMatts = 200;
-            mattsRemaining = 200;
+            startingMines = 200;
+            minesRemaining = 200;
             leftEdge = [31, 61, 91, 121, 151, 181, 211, 241, 271, 301, 331, 361, 391, 421, 451, 481, 511, 541, 571, 601, 631, 661];
             rightEdge = [60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 510, 540, 570, 600, 630, 660, 690];
             topLeftCorner = [2, 31, 32];
@@ -103,7 +103,7 @@ setTimeout(difficultyChange = () => {
 }, 0);
 
 setup = () => {
-    updateMattCount();
+    updateMineCount();
     const gridArea = document.getElementById('gridArea');
     // Create game grid
     for (i = 1; i <= lastSquare; i++) {
@@ -121,41 +121,41 @@ setup = () => {
             (document.getElementById('tryHarder').style.display === 'block')) {
                 return;
             }
-            // Matt identified
+            // mine identified
             if (e.button === 2) {
                 if (e.target.style.backgroundColor !== 'rgb(216, 216, 216)') {
                     if (e.target.style.backgroundImage == flagImage) {
                         e.target.style.backgroundImage = '';
-                        mattsRemaining++;
+                        minesRemaining++;
                     // only allow max number of flags
-                    } else if (mattsRemaining > 0 && e.target.innerHTML === '') {
+                    } else if (minesRemaining > 0 && e.target.innerHTML === '') {
                         e.target.style.backgroundImage = flagImage;
-                        mattsRemaining--;
+                        minesRemaining--;
                     }
-                    updateMattCount();
+                    updateMineCount();
                 }
             } else {
-                const mattIndex = mattLocations.indexOf(+e.target.id);
-                // Matt clicked
-                if (mattIndex >= 0) {
-                    // you can only lose if you click a matt on a turn after your first
+                const mineIndex = mineLocations.indexOf(+e.target.id);
+                // mine clicked
+                if (mineIndex >= 0) {
+                    // you can only lose if you click a mine on a turn after your first
                     if (!firstClick) {
-                        // display all matt locations
-                        mattLocations.forEach((matt) => {
-                            document.getElementById(matt).style.backgroundImage = mineImage;
+                        // display all mine locations
+                        mineLocations.forEach((mine) => {
+                            document.getElementById(mine).style.backgroundImage = mineImage;
                         })
-                        mattsRemaining = 0;
-                        updateMattCount();
+                        minesRemaining = 0;
+                        updateMineCount();
                         document.getElementById('tryHarder').style.display = 'block';
                     } else {
-                        // remove the 1 matt that was clicked on and pick a new random location
-                        mattLocations.splice(mattIndex, 1);
-                        setMatts(1);
-                        //Check location of nearby matts
+                        // remove the 1 mine that was clicked on and pick a new random location
+                        mineLocations.splice(mineIndex, 1);
+                        setMines(1);
+                        //Check location of nearby mines
                         checkSurroundingTiles([+squareID]); 
                     }
                 } else {
-                    //Check location of nearby matts
+                    //Check location of nearby mines
                     checkSurroundingTiles([+squareID]); 
                 }
 
@@ -165,26 +165,26 @@ setup = () => {
         });
         gridArea.appendChild(newDiv);
     };
-    setMatts();
+    setMines();
 }
 
-// set matts
-setMatts = (numberToSet = 0) => {
-    for (i = 1; i <= (numberToSet || startingMatts); i++) {
-        const matt = Math.floor(Math.random() * lastSquare) + 1;
-        if (mattLocations.indexOf(matt) >= 0) {
-            // If already a matt at that square, reduce incrementor and loop through again so we end up with correct # of matts.
+// set mines
+setMines = (numberToSet = 0) => {
+    for (i = 1; i <= (numberToSet || startingMines); i++) {
+        const mine = Math.floor(Math.random() * lastSquare) + 1;
+        if (mineLocations.indexOf(mine) >= 0) {
+            // If already a mine at that square, reduce incrementor and loop through again so we end up with correct # of mines.
             i--;
         } else {
-            // If no matt at that square, add one.
-            mattLocations.push(matt);
+            // If no mine at that square, add one.
+            mineLocations.push(mine);
         }
     }
 }
 
-// update remaining Matt counter at the top
-updateMattCount = () => {
-    document.getElementById('remaining').innerHTML = `Matts remaining: ${mattsRemaining}`;
+// update remaining mine counter at the top
+updateMineCount = () => {
+    document.getElementById('remaining').innerHTML = `Mines remaining: ${minesRemaining}`;
 }
 
 // style squares that have already been clicked on
@@ -194,17 +194,17 @@ emptyTileNumberStyling = (squareID) => {
 }
 
 checkCorner = (squareID, corner) => {
-    let nearbyMatts = 0;
+    let nearbyMines = 0;
     corner.forEach((cornerTile) => {
-        if (mattLocations.indexOf(cornerTile) >= 0) {
-            nearbyMatts++
+        if (mineLocations.indexOf(cornerTile) >= 0) {
+            nearbyMines++
         }
     })
-    if (nearbyMatts === 0 && squareID <= lastSquare && squareID > 0) {
+    if (nearbyMines === 0 && squareID <= lastSquare && squareID > 0) {
         checkSurroundingTiles(corner);
     }
-    if (nearbyMatts > 0) {
-        document.getElementById(squareID).innerHTML = nearbyMatts;
+    if (nearbyMines > 0) {
+        document.getElementById(squareID).innerHTML = nearbyMines;
         removeIncorrectFlag(squareID);
         emptyTileNumberStyling(squareID);
     } else {
@@ -214,17 +214,17 @@ checkCorner = (squareID, corner) => {
 }
 
 checkEdge = (squareID, edgeCheck) => {
-    let nearbyMatts = 0;
+    let nearbyMines = 0;
     edgeCheck.forEach((edge) => {
-        if (mattLocations.indexOf(edge) >= 0) {
-            nearbyMatts++;
+        if (mineLocations.indexOf(edge) >= 0) {
+            nearbyMines++;
         }
     })
-    if (nearbyMatts === 0 && squareID <= lastSquare && squareID > 0) {
+    if (nearbyMines === 0 && squareID <= lastSquare && squareID > 0) {
         checkSurroundingTiles(edgeCheck);
     }
-    if (nearbyMatts > 0) {
-        document.getElementById(squareID).innerHTML = nearbyMatts;
+    if (nearbyMines > 0) {
+        document.getElementById(squareID).innerHTML = nearbyMines;
         removeIncorrectFlag(squareID);
         emptyTileNumberStyling(squareID);
     } else {
@@ -234,34 +234,34 @@ checkEdge = (squareID, edgeCheck) => {
 }
 
 checkOtherSquares = (squareID) => {
-    let nearbyMatts = 0;
+    let nearbyMines = 0;
     edgeIntervals.forEach((interval) => {
-        if (mattLocations.indexOf(squareID - interval) >= 0) {
-            nearbyMatts++;
+        if (mineLocations.indexOf(squareID - interval) >= 0) {
+            nearbyMines++;
         }
-        if (mattLocations.indexOf(squareID + interval) >= 0) {
-            nearbyMatts++;
+        if (mineLocations.indexOf(squareID + interval) >= 0) {
+            nearbyMines++;
         }
     })
-    if (nearbyMatts === 0 && squareID <= lastSquare && squareID > 0) {
+    if (nearbyMines === 0 && squareID <= lastSquare && squareID > 0) {
         checkSurroundingTiles([squareID - edgeIntervals[3], squareID - edgeIntervals[2], squareID - edgeIntervals[1], squareID - edgeIntervals[0], squareID + edgeIntervals[0], squareID + edgeIntervals[1], squareID + edgeIntervals[2], squareID + edgeIntervals[3]]);
     }
-    if (document.getElementById(squareID) && nearbyMatts > 0) {
-        document.getElementById(squareID).innerHTML = nearbyMatts;
+    if (document.getElementById(squareID) && nearbyMines > 0) {
+        document.getElementById(squareID).innerHTML = nearbyMines;
         removeIncorrectFlag(squareID);
         emptyTileNumberStyling(squareID);
-    } else if (document.getElementById(squareID) && nearbyMatts === 0) {
+    } else if (document.getElementById(squareID) && nearbyMines === 0) {
         emptyTileNumberStyling(squareID);
         removeIncorrectFlag(squareID);
     }
 }
 
-// remove flag and increment remaining Matts counter if that space is filled in by clicking on adjacent empty square and flag was incorrectly placed
+// remove flag and increment remaining mines counter if that space is filled in by clicking on adjacent empty square and flag was incorrectly placed
 removeIncorrectFlag =(squareID) => {
     if (document.getElementById(squareID).style.backgroundImage === flagImage) {
         document.getElementById(squareID).style.backgroundImage = '';
-        mattsRemaining++;
-        updateMattCount();
+        minesRemaining++;
+        updateMineCount();
     }
 }
 
@@ -274,8 +274,8 @@ checkSurroundingTiles = (squaresToCheck) => {
                 squaresChecked.push(square);
             }
            
-            // if all non-matts are clicked (you win!)
-            if (squaresChecked.length === (lastSquare - startingMatts)) {
+            // if all non-mines are clicked (you win!)
+            if (squaresChecked.length === (lastSquare - startingMines)) {
                 youWin();
             }
 
@@ -324,17 +324,17 @@ youWin = () => {
     document.getElementById('victory').style.display = 'block';
 }
 
-// reset the board, randomize matt locations, reset styles, hide win/lose messages
+// reset the board, randomize mine locations, reset styles, hide win/lose messages
 reset = (skip) => {
     document.getElementById('tryHarder').style.display = 'none';
     document.getElementById('victory').style.display = 'none';
-    mattsRemaining = startingMatts;
+    minesRemaining = startingMines;
     firstClick = true;
-    updateMattCount();
-    mattLocations = [];
+    updateMineCount();
+    mineLocations = [];
     squaresChecked = [];
     if (!skip) {
-        setMatts();
+        setMines();
     }
     const squares = document.getElementsByClassName('square');
     Array.from(squares).forEach((square) => {
